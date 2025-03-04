@@ -23,6 +23,7 @@ architecture Behavioral of spi_controller is
     signal shift_data           : std_logic_vector(15 downto 0);
     signal received_data        : std_logic_vector(15 downto 0);
     signal transaction_done     : std_logic := '0';
+    signal spi_bit_counter      : integer range 0 to 15 := 0;
 
     type state_type is (IDLE, ASSERT_CS, SEND, RECEIVE, DONE);
     signal state : state_type := IDLE;
