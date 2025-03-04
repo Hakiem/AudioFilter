@@ -30,6 +30,7 @@ architecture Behavioral of spi_controller is
 begin
 
     spi_clk <= spi_clk_internal;
+    adc_result <= shift_data(11 downto 0);
 
     -- Instantiate SPI Clock Generator (Generates ~1.8 MHz SPI Clock)
     uut_spi_clk : entity work.spi_clock_gen
@@ -52,6 +53,19 @@ begin
             data_out => received_data(15 downto 4)
         );
 
+    process(spi_clk_internal, rst)
+    begin
+        if rst = '0' then
+            shift_data <= (others => '0');  -- Reset shift register
+            spi_bit_counter <= 0;          -- Reset bit counter
+        elsif rising_edge(spi_clk_internal) then
+            if shift_enable = '1' then
+                shift_data <= shift_data(14 downto 0) & miso;  -- Shift in new MISO bit
+                spi_bit_counter <= spi_bit_counter + 1;  -- ✅ Increment counter on each SPI clock
+            end if;
+        end if;
+    end process;
+    
     -- SPI Controller FSM (State Machine)
     process(clk)
     begin
@@ -85,7 +99,7 @@ begin
                     -- **SEND State**: Send the command word to MCP3202
                     when SEND =>
                         shift_enable <= '1';       -- Continue shifting data
-                        if received_data(15 downto 4) /= "000000000000" then
+                        if spi_bit_counter = 15 then
                             -- If data has started shifting in, move to RECEIVE state
                             shift_enable <= '0';    -- Stop shifting data
                             state <= RECEIVE;       -- Move to RECEIVE state
