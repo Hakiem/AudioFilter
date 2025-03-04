@@ -2,3 +2,6 @@ Running: xsim.dir/tb_spi_controller_behav/xsimk -simmode gui -wdb tb_spi_control
 Design successfully loaded
 Design Loading Memory Usage: 183244 KB (Peak: 183364 KB)
 Design Loading CPU Usage: 1080 ms
+Simulation completed
+Simulation Memory Usage: 264980 KB (Peak: 322512 KB)
+Simulation CPU Usage: 1090 ms
