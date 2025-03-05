@@ -21,6 +21,12 @@ architecture Behavioral of tb_spi_controller is
     signal adc_result_tb : std_logic_vector(11 downto 0) := (others => '0');
     signal spi_clk_tb    : std_logic;
 
+    type data_array_type is array(0 to 9) of std_logic_vector(15 downto 0);
+    signal data_array : data_array_type := (
+        x"5555", x"A5A5", x"1234", x"ABCD", x"6789", 
+        x"000F", x"F000", x"1F2E", x"9876", x"FEDC"
+    );  -- Example 10 values to send
+
 begin
 
     -- Clock process (100MHz)
@@ -40,61 +46,49 @@ begin
             spi_clk    => spi_clk_tb 
         );
 
-    -- Simulated MCP3203 ADC Response (Continous Sampling)
+    -- Simulated SPI Slave (MCP3203 ADC Response)
     stim_process: process
-        variable i : integer := 0;  -- Track bit position
+        variable shift_reg   : std_logic_vector(15 downto 0);
+        variable bit_counter : integer;
+        variable index : integer := 0;
     begin
+
         -- Apply reset
-        wait for 15 ns;
         rst_tb <= '0';
         wait for 15 ns;
         rst_tb <= '1';
         wait for 15 ns;
 
-        -- **Start Continuous Sampling**
-        while now < 1 ms loop
-            wait until cs_tb = '0';  -- Wait for SPI transaction to start
-            i := 0;  -- Reset bit counter
+        index := 0;  -- Start from first value
 
-            -- **Simulate MCP3202 Sending 16-bit Data (First 4 Bits Dummy + 12-bit ADC Data)**
-            while i < 16 loop
-                wait until rising_edge(spi_clk_tb);  -- **Ensure MISO updates with SPI clock**
+        -- Loop through each 16-bit value in the array
+        while index < 10 loop
+            shift_reg := data_array(index);  -- Load current value
+            bit_counter := 0;  -- Reset bit counter for each value
 
-                -- **Correct Bitwise Response**
-                case i is
-                    -- **4-bit dummy response**
-                    when 0  => miso_tb <= '0';  -- Dummy Bit 15
-                    when 1  => miso_tb <= '0';  -- Dummy Bit 14
-                    when 2  => miso_tb <= '0';  -- Dummy Bit 13
-                    when 3  => miso_tb <= '0';  -- Dummy Bit 12
-                    
-                    -- **12-bit ADC Data (0x555 = 101010101010)**
-                    when 4  => miso_tb <= '1';  -- Bit 11
-                    when 5  => miso_tb <= '0';  -- Bit 10
-                    when 6  => miso_tb <= '1';  -- Bit 9
-                    when 7  => miso_tb <= '0';  -- Bit 8
-                    when 8  => miso_tb <= '1';  -- Bit 7
-                    when 9  => miso_tb <= '0';  -- Bit 6
-                    when 10 => miso_tb <= '1';  -- Bit 5
-                    when 11 => miso_tb <= '0';  -- Bit 4
-                    when 12 => miso_tb <= '1';  -- Bit 3
-                    when 13 => miso_tb <= '0';  -- Bit 2
-                    when 14 => miso_tb <= '1';  -- Bit 1
-                    when 15 => miso_tb <= '0';  -- Bit 0
-                    when others => miso_tb <= '0';  -- Default to 0
-                end case;
+            -- Wait for CS to go low (Start of SPI transaction)
+            wait until cs_tb = '0';
 
-                i := i + 1;  -- Increment bit counter
+            -- Send 16 bits of the current value
+            while bit_counter < 16 loop
+                wait until rising_edge(spi_clk_tb);
+                miso_tb <= shift_reg(15); -- Send MSB first
+                shift_reg := shift_reg(14 downto 0) & '0'; -- Shift left
+                bit_counter := bit_counter + 1;
             end loop;
 
-            miso_tb <= '0';
-            -- Wait for transaction completion
-            wait until cs_tb = '1';  -- SPI Transaction Done
-            wait for 50 ns;  -- Small delay before next transaction
-        end loop;
+            -- Wait for SPI transaction to complete (CS goes high)
+            wait until cs_tb = '1';
 
-        -- **Check ADC Results in Simulation**
-        assert adc_result_tb = x"555" report "Incorrect ADC Result!" severity failure;
+            -- **VERIFY: Check if the received ADC result matches expected value**
+            wait until rising_edge(clk_tb); -- Small delay after CS goes high
+            assert adc_result_tb = data_array(index)(11 downto 0)
+                report "Mismatch: Expected " & integer'image(conv_integer(data_array(index)(11 downto 0))) &
+                       " but got " & integer'image(conv_integer(adc_result_tb))
+                severity error;
+
+            index := index + 1; -- Move to next value
+        end loop;
 
         -- **Stop Simulation**
         assert false report "Test Completed Successfully" severity failure;

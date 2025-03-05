@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity spi_shift_register is
     port(
-        spi_clk             : in std_logic;     -- SPI Clock input (~1.8 MHz)
-        rst                 : in std_logic;     -- Reset signal
+        spi_clk             : in std_logic;  -- SPI Clock input (~1.8 MHz)
+        rst                 : in std_logic;  -- Reset signal
         shift               : in std_logic;  -- Shift Enable
         miso                : in std_logic;  -- Data from MCP3202 (ADC output)
         mosi                : out std_logic; -- Data to MCP3202 (Config input)
@@ -26,8 +26,17 @@ begin
         elsif rising_edge(spi_clk) then
             if shift = '1' then
                 shift_reg <= shift_reg(14 downto 0) & '0'; -- Shift Left
-                recv_reg  <= recv_reg(10 downto 0) & miso; -- Shift in Data from MCP3202
+                recv_reg  <= recv_reg(10 downto 0) & miso; -- Shift Right : in Data from MCP3202
             end if;
+        end if;
+    end process;
+
+    process(shift, rst)
+    begin
+        if rst = '0' then
+            shift_reg <= (others => '0');
+        elsif shift = '1' then
+            shift_reg <= data_in;  -- Load data to send
         end if;
     end process;
 
