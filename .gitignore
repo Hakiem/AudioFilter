@@ -11,6 +11,7 @@
 *.jou
 *.rpt
 *.vdi
+*.xpr
 
 ## bitstream
 *.bit
@@ -73,4 +74,4 @@ xvlog.*
 *.dcp
 
 !AudioFilter.sim/sim_1/behave
-!AudioFilter.ip_user_files
+!AudioFilter.ip_user_files/
