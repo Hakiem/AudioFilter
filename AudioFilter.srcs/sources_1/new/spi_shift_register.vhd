@@ -16,30 +16,31 @@ end spi_shift_register;
 architecture Behavioral of spi_shift_register is
     signal shift_reg : std_logic_vector(15 downto 0) := (others => '0'); -- Outgoing data
     signal recv_reg  : std_logic_vector(11 downto 0) := (others => '0'); -- Incoming data
-begin
-
-    process(spi_clk, rst)
+    signal load      : std_logic := '0';  -- Internal signal to track loading
     begin
-        if rst = '0' then
-            shift_reg <= (others => '0');
-            recv_reg  <= (others => '0');
-        elsif rising_edge(spi_clk) then
-            if shift = '1' then
-                shift_reg <= shift_reg(14 downto 0) & '0'; -- Shift Left
-                recv_reg  <= recv_reg(10 downto 0) & miso; -- Shift Right : in Data from MCP3202
+        process(spi_clk, rst)
+        begin
+            if rst = '0' then
+                shift_reg <= (others => '0');
+                recv_reg  <= (others => '0');
+                load      <= '1';  -- Allow loading on reset
+            elsif rising_edge(spi_clk) then
+                if shift = '1' then
+                    if load = '1' then
+                        shift_reg <= data_in;   -- Load `data_in` at the start of shifting
+                        load <= '0';            -- Prevent reloading during shifting
+                    else
+                        shift_reg <= shift_reg(14 downto 0) & '0';  -- Shift Left (MOSI)
+                    end if;
+                    recv_reg  <= recv_reg(10 downto 0) & miso; -- Shift Right (MISO)
+                else
+                    load <= '1';  -- Allow loading `data_in` when shift is disabled
+                end if;
             end if;
-        end if;
-    end process;
-
-    process(shift, rst)
-    begin
-        if rst = '0' then
-            shift_reg <= (others => '0');
-        elsif shift = '1' then
-            shift_reg <= data_in;  -- Load data to send
-        end if;
-    end process;
-
-    mosi <= shift_reg(15);  -- Send MSB First
-    data_out <= recv_reg;   -- Output received ADC data
-end Behavioral;
+        end process;
+    
+        -- Send MSB first on MOSI
+        mosi <= shift_reg(15);
+        data_out <= recv_reg; -- output received ADC data
+    
+    end Behavioral;

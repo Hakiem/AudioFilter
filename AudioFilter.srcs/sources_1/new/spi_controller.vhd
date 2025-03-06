@@ -20,8 +20,8 @@ architecture Behavioral of spi_controller is
     -- Internal Signals
     signal spi_clk_internal     : std_logic := '0'; -- Internal SPI Clock
     signal shift_enable         : std_logic := '0';
-    signal shift_data           : std_logic_vector(15 downto 0);
-    signal received_data        : std_logic_vector(11 downto 0);
+    signal shift_data           : std_logic_vector(15 downto 0) := (others => '0');
+    signal received_data        : std_logic_vector(11 downto 0) := (others => '0');
     signal transaction_done     : std_logic := '0';
     signal spi_bit_counter      : integer range 0 to 15 := 0;
 
@@ -57,11 +57,10 @@ begin
     process(spi_clk_internal, rst)
     begin
         if rst = '0' then
-            shift_data <= (others => '0');  -- Reset shift register
             spi_bit_counter <= 0;          -- Reset bit counter
         elsif rising_edge(spi_clk_internal) then
             if shift_enable = '1' then
-                shift_data <= shift_data(14 downto 0) & miso;  -- Shift in new MISO bit
+                -- shift_data <= shift_data(14 downto 0) & miso;  -- Shift in new MISO bit
                 spi_bit_counter <= spi_bit_counter + 1;         -- Increment counter on each SPI clock
             elsif state = DONE then
                 spi_bit_counter <= 0;  -- Reset bit counter
@@ -78,13 +77,15 @@ begin
                 cs                  <= '1'; -- Deselect MCP3202
                 busy                <= '0'; -- Ready
                 shift_enable        <= '0';
+                shift_data          <= (others => '0');
             else
                 case state is
                     -- **IDLE State**: Wait before starting a new transaction
                     when IDLE => 
-                        busy    <= '1';
-                        cs      <= '0'; -- Deselect MCP3202. Chip select High (Not Active)
-                        state   <= ASSERT_CS;
+                        busy        <= '1';
+                        cs          <= '0'; -- Deselect MCP3202. Chip select High (Not Active)
+                        state       <= ASSERT_CS;
+                        shift_data  <= (others => '0');
                     -- **ASSERT_CS State**: Enable MCP3202 and prepare SPI transaction
                     when ASSERT_CS =>
                         cs      <= '0'; -- Select MCP3202. Chip select Low (Active)
@@ -101,10 +102,12 @@ begin
                         state <= SEND_MCP3202_CMD;  -- Move to SEND_MCP3202_CMD state
                     -- **SEND_MCP3202_CMD State**: Send the command word to MCP3202
                     when SEND_MCP3202_CMD =>
-                        shift_enable <= '1';       -- Continue shifting data
-                        if spi_bit_counter = 15 then
+                        if spi_bit_counter < 15 then
+                            shift_enable <= '1';       -- Keep shifting until all 16 bits are sent
+                        else
                             -- If data has started shifting in, move to RCV_DATA state
                             shift_enable <= '0';    -- Stop shifting data
+                            shift_data   <= (others => '0');  -- Clear data
                             state <= RCV_DATA;      -- Move to RCV_DATA state
                         end if;
                     -- **RECEIVE State**: Capture the ADC data from MCP3202
