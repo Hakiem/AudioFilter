@@ -16,10 +16,10 @@ end button_debouncer;
 
 architecture Behavioral of button_debouncer is
 
-    constant DEBOUNCE_COUNT : integer := CLK_FREQ * DEBOUNCE_TIME / 1000;   -- Number of clock cycles for debounce period
-    signal button_sync  : std_logic_vector(1 downto 0) := (others => '1');  -- Flip flop 1 and 2 for metastability
-    signal counter      : integer range 0 to DEBOUNCE_COUNT := 0;           -- Debounce counter
-    signal button_stable: std_logic := '1';                                 -- Stable button output
+    constant DEBOUNCE_COUNT : integer := (CLK_FREQ / 1000) * DEBOUNCE_TIME_MS;   -- Number of clock cycles for debounce period
+    signal button_sync  : std_logic_vector(1 downto 0) := (others => '1');       -- Flip flop 1 and 2 for metastability
+    signal counter      : integer range 0 to DEBOUNCE_COUNT := 0;                -- Debounce counter
+    signal button_stable: std_logic := '0';                                      -- Stable button output
 
 begin
 
@@ -27,30 +27,26 @@ begin
     process(clk)
     begin
         if rising_edge(clk) then
+
+            -- Metastability filter : Double flip-flop synchronizer
             button_sync(0) <= button_in;
             button_sync(1) <= button_sync(0);
-        end if;
-    end process;
 
-    process(clk)
-    begin
-        if rising_edge(clk) then
-            if rst = '0' then
-                counter       <= 0;
-                button_stable <= '0';
-            elsif button_sync(1) /= button_stable then
-                -- Start counting if the button state changes
-                counter <= counter + 1;
-                if counter >= DEBOUNCE_COUNT then
+            -- Debounce logic
+            if button_sync(1) /= button_stable then
+                -- **If button state changes, start counting**
+                if counter < DEBOUNCE_COUNT then
+                    counter <= counter + 1;
+                else
                     button_stable <= button_sync(1); -- Accept stable state
                     counter <= 0; -- Reset counter
                 end if;
             else
-                counter <= 0; -- Reset counter when input is stable
+                counter <= 0; -- Reset counter if input remains stable
             end if;
         end if;
     end process;
 
-    button_out <= button_stable; -- Output debounced button state
+    button_out <= not button_stable; -- Output debounced button state
 
 end Behavioral;
