@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_module_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="tb_top_module" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="7,465.652577 us"></ZoomStartTime>
+      <ZoomEndTime time="7,863.983930 us"></ZoomEndTime>
+      <Cursor1Time time="21,244.245000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="151"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="36" />
+   <wvobject type="logic" fp_name="/tb_top_module/clk_tb">
+      <obj_property name="ElementShortName">clk_tb</obj_property>
+      <obj_property name="ObjectShortName">clk_tb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/button_raw_tb">
+      <obj_property name="ElementShortName">button_raw_tb</obj_property>
+      <obj_property name="ObjectShortName">button_raw_tb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/miso_tb">
+      <obj_property name="ElementShortName">miso_tb</obj_property>
+      <obj_property name="ObjectShortName">miso_tb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/mosi_tb">
+      <obj_property name="ElementShortName">mosi_tb</obj_property>
+      <obj_property name="ObjectShortName">mosi_tb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/cs_tb">
+      <obj_property name="ElementShortName">cs_tb</obj_property>
+      <obj_property name="ObjectShortName">cs_tb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/spi_clk_tb">
+      <obj_property name="ElementShortName">spi_clk_tb</obj_property>
+      <obj_property name="ObjectShortName">spi_clk_tb</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_top_module/adc_out_tb">
+      <obj_property name="ElementShortName">adc_out_tb[11:0]</obj_property>
+      <obj_property name="ObjectShortName">adc_out_tb[11:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/CLK_PERIOD">
+      <obj_property name="ElementShortName">CLK_PERIOD</obj_property>
+      <obj_property name="ObjectShortName">CLK_PERIOD</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/DEBOUNCE_TIME_MS">
+      <obj_property name="ElementShortName">DEBOUNCE_TIME_MS</obj_property>
+      <obj_property name="ObjectShortName">DEBOUNCE_TIME_MS</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider25" type="divider">
+      <obj_property name="label">SPI_Controller</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/rst">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/channel_sel">
+      <obj_property name="ElementShortName">channel_sel</obj_property>
+      <obj_property name="ObjectShortName">channel_sel</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/miso">
+      <obj_property name="ElementShortName">miso</obj_property>
+      <obj_property name="ObjectShortName">miso</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/mosi">
+      <obj_property name="ElementShortName">mosi</obj_property>
+      <obj_property name="ObjectShortName">mosi</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/cs">
+      <obj_property name="ElementShortName">cs</obj_property>
+      <obj_property name="ObjectShortName">cs</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/busy">
+      <obj_property name="ElementShortName">busy</obj_property>
+      <obj_property name="ObjectShortName">busy</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_top_module/uut/uut_spi_controller/adc_result">
+      <obj_property name="ElementShortName">adc_result[11:0]</obj_property>
+      <obj_property name="ObjectShortName">adc_result[11:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/spi_clk">
+      <obj_property name="ElementShortName">spi_clk</obj_property>
+      <obj_property name="ObjectShortName">spi_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/spi_clk_internal">
+      <obj_property name="ElementShortName">spi_clk_internal</obj_property>
+      <obj_property name="ObjectShortName">spi_clk_internal</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/shift_enable">
+      <obj_property name="ElementShortName">shift_enable</obj_property>
+      <obj_property name="ObjectShortName">shift_enable</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_top_module/uut/uut_spi_controller/shift_data">
+      <obj_property name="ElementShortName">shift_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">shift_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_top_module/uut/uut_spi_controller/received_data">
+      <obj_property name="ElementShortName">received_data[11:0]</obj_property>
+      <obj_property name="ObjectShortName">received_data[11:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_spi_controller/transaction_done">
+      <obj_property name="ElementShortName">transaction_done</obj_property>
+      <obj_property name="ObjectShortName">transaction_done</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_spi_controller/spi_bit_counter">
+      <obj_property name="ElementShortName">spi_bit_counter</obj_property>
+      <obj_property name="ObjectShortName">spi_bit_counter</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_spi_controller/state">
+      <obj_property name="ElementShortName">state</obj_property>
+      <obj_property name="ObjectShortName">state</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider42" type="divider">
+      <obj_property name="label">Button_Debouncer</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_button_debouncer/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_button_debouncer/button_in">
+      <obj_property name="ElementShortName">button_in</obj_property>
+      <obj_property name="ObjectShortName">button_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_button_debouncer/button_out">
+      <obj_property name="ElementShortName">button_out</obj_property>
+      <obj_property name="ObjectShortName">button_out</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_top_module/uut/uut_button_debouncer/button_sync">
+      <obj_property name="ElementShortName">button_sync[1:0]</obj_property>
+      <obj_property name="ObjectShortName">button_sync[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_button_debouncer/counter">
+      <obj_property name="ElementShortName">counter</obj_property>
+      <obj_property name="ObjectShortName">counter</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_top_module/uut/uut_button_debouncer/button_stable">
+      <obj_property name="ElementShortName">button_stable</obj_property>
+      <obj_property name="ObjectShortName">button_stable</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_button_debouncer/CLK_FREQ">
+      <obj_property name="ElementShortName">CLK_FREQ</obj_property>
+      <obj_property name="ObjectShortName">CLK_FREQ</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_button_debouncer/DEBOUNCE_TIME_MS">
+      <obj_property name="ElementShortName">DEBOUNCE_TIME_MS</obj_property>
+      <obj_property name="ObjectShortName">DEBOUNCE_TIME_MS</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_top_module/uut/uut_button_debouncer/DEBOUNCE_COUNT">
+      <obj_property name="ElementShortName">DEBOUNCE_COUNT</obj_property>
+      <obj_property name="ObjectShortName">DEBOUNCE_COUNT</obj_property>
+   </wvobject>
+</wave_config>
